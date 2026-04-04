@@ -9,11 +9,11 @@ import requests
 SUPABASE_URL = "https://lfwdstvfqoziyewdfkdv.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxmd2RzdHZmcW96aXlld2Rma2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxODIzNzMsImV4cCI6MjA5MDc1ODM3M30.BxVhK0oPD0YbDB7NjrGtnUzvIN94fcfh4fJPua2mc6E"
 TABLE = "pipe_repairs"
+TECHNICIANS_TABLE = "technicians"
 
 # Telegram Bot Settings
-# วิธีขอ: คุยกับ @BotFather ใน Telegram → /newbot → copy token
-TELEGRAM_BOT_TOKEN = "8719386203:AAGPqCrdE-JQ6-VbQ967dVuzD4hi7tHXgz8"
-TELEGRAM_CHAT_ID = "6442934423"
+TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN"
+TELEGRAM_CHAT_ID = "YOUR_CHAT_ID"
 
 HEADERS = {
     "apikey": SUPABASE_ANON_KEY,
@@ -23,7 +23,7 @@ HEADERS = {
 }
 
 # ─────────────────────────────────────────
-#  SUPABASE HELPERS
+#  SUPABASE HELPERS — pipe_repairs
 # ─────────────────────────────────────────
 def fetch_all(filters: dict = None, limit: int = 500):
     """ดึงข้อมูลทั้งหมดจาก Supabase"""
@@ -54,6 +54,60 @@ def update_record(record_id: int, data: dict):
         json=data,
     )
     return r.ok, r.json()
+
+
+# ─────────────────────────────────────────
+#  SUPABASE HELPERS — technicians
+# ─────────────────────────────────────────
+def fetch_technicians(active_only: bool = True):
+    """ดึงรายชื่อพนักงาน/ช่าง"""
+    params = "?select=*&order=name.asc"
+    if active_only:
+        params += "&active=eq.true"
+    r = requests.get(f"{SUPABASE_URL}/rest/v1/{TECHNICIANS_TABLE}{params}", headers=HEADERS)
+    return r.json() if r.ok else []
+
+
+def insert_technician(data: dict):
+    """เพิ่มพนักงาน/ช่างใหม่"""
+    r = requests.post(
+        f"{SUPABASE_URL}/rest/v1/{TECHNICIANS_TABLE}",
+        headers=HEADERS,
+        json=data,
+    )
+    return r.ok, r.json()
+
+
+def update_technician(tech_id: int, data: dict):
+    """อัปเดตข้อมูลพนักงาน"""
+    h = {**HEADERS, "Prefer": "return=representation"}
+    r = requests.patch(
+        f"{SUPABASE_URL}/rest/v1/{TECHNICIANS_TABLE}?id=eq.{tech_id}",
+        headers=h,
+        json=data,
+    )
+    return r.ok, r.json()
+
+
+def get_technician_names(role_filter: str = None):
+    """คืนรายชื่อพนักงานเป็น list สำหรับ selectbox"""
+    techs = fetch_technicians(active_only=True)
+    if role_filter:
+        techs = [t for t in techs if t.get("role") == role_filter]
+    names = [t["name"] for t in techs]
+    return names if names else ["ไม่มีข้อมูล"]
+
+
+# ─────────────────────────────────────────
+#  CHANNELS
+# ─────────────────────────────────────────
+CHANNELS = [
+    "📱 Line",
+    "📘 Facebook",
+    "📞 Call Center 1162",
+    "☎️ โทรศัพท์แจ้ง",
+    "🚶 Walk-in (เข้ามาแจ้งเอง)",
+]
 
 
 # ─────────────────────────────────────────
@@ -91,7 +145,6 @@ def apply_mobile_style():
         }
         h1 { font-size: 1.5rem !important; }
         h2 { font-size: 1.2rem !important; }
-        /* ซ่อน sidebar header บน mobile */
         section[data-testid="stSidebar"] { min-width: 0 !important; }
     </style>
     """, unsafe_allow_html=True)
