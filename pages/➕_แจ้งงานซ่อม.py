@@ -5,7 +5,7 @@ import streamlit as st
 from datetime import datetime, date
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from utils import insert_record, send_line_notify, apply_mobile_style, fetch_all
+from utils import insert_record, send_line_notify, apply_mobile_style, fetch_all, get_technician_names, CHANNELS
 
 st.set_page_config(page_title="➕ แจ้งซ่อม", page_icon="➕", layout="centered",
                    initial_sidebar_state="collapsed")
@@ -28,12 +28,26 @@ def get_next_job_id():
     next_n = (max(nums) + 1) if nums else 1
     return f"N{next_n:04d}"
 
+# ─── โหลดรายชื่อพนักงาน ───
+@st.cache_data(ttl=60)
+def load_staff():
+    names = get_technician_names(role_filter="ผู้รับเรื่อง")
+    if not names or names == ["ไม่มีข้อมูล"]:
+        # fallback ถ้ายังไม่มีในฐานข้อมูล
+        return ["อโนทัย แก้วเมืองมา", "อรุณี คำปัญโญ", "พิกุล มงคลวิสุทธื์",
+                "ศิริลักษณ์ สุหงษา", "อรัญญา กังวาล", "ชนัญชิดา เลขะผล", "อื่นๆ"]
+    return names + ["อื่นๆ"]
+
 with st.form("repair_form", clear_on_submit=True):
     st.subheader("📝 ข้อมูลงานซ่อม")
 
     job_id = st.text_input("เลขที่งาน", value=get_next_job_id(), disabled=True)
     repair_date = st.date_input("วันที่", value=date.today())
     repair_time = st.time_input("เวลา", value=datetime.now().time())
+
+    st.divider()
+    st.subheader("📡 ช่องทางการรับแจ้ง")
+    channel = st.selectbox("รับแจ้งจาก *", CHANNELS)
 
     st.divider()
     st.subheader("👤 ข้อมูลลูกค้า")
@@ -48,10 +62,10 @@ with st.form("repair_form", clear_on_submit=True):
     ])
     location = st.text_input("สถานที่ *", placeholder="บ้านเลขที่ / ถนน / ตำบล")
 
-    assigned_to = st.selectbox("ผู้รับแจ้ง *", [
-        "อโนทัย แก้วเมืองมา", "อรุณี คำปัญโญ", "พิกุล มงคลวิสุทธื์",
-        "ศิริลักษณ์ สุหงษา", "อรัญญา กังวาล", "ชนัญชิดา เลขะผล", "อื่นๆ"
-    ])
+    st.divider()
+    st.subheader("👷 ผู้รับเรื่อง")
+    staff_list = load_staff()
+    assigned_to = st.selectbox("ผู้รับแจ้ง *", staff_list)
 
     urgency = st.radio("ความเร่งด่วน", ["เร่งด่วน", "ปกติ"], horizontal=True)
     notes = st.text_area("หมายเหตุ", placeholder="รายละเอียดเพิ่มเติม (ถ้ามี)")
@@ -66,6 +80,7 @@ if submitted:
             "job_id": job_id,
             "date": str(repair_date),
             "time": repair_time.strftime("%H:%M"),
+            "channel": channel,
             "customer_name": customer_name.strip(),
             "phone": phone.strip(),
             "repair_type": repair_type,
@@ -82,9 +97,9 @@ if submitted:
             st.success(f"✅ บันทึกงาน **{job_id}** สำเร็จ!")
             st.balloons()
 
-            # แจ้ง LINE
             msg = (
                 f"\n🔧 งานซ่อมใหม่ [{job_id}]\n"
+                f"📡 ช่องทาง: {channel}\n"
                 f"👤 ลูกค้า: {customer_name}\n"
                 f"📞 โทร: {phone}\n"
                 f"🛠 ประเภท: {repair_type}\n"
@@ -93,10 +108,7 @@ if submitted:
                 f"👷 ผู้รับแจ้ง: {assigned_to}\n"
                 f"🕐 เวลา: {repair_time.strftime('%H:%M')}"
             )
-            line_ok, _ = send_line_notify(msg)
-
-            if line_ok:
-                st.info("📲 ส่งแจ้งเตือน LINE สำเร็จ")
+            send_line_notify(msg)
 
             st.cache_data.clear()
 
