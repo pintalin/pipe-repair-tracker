@@ -121,7 +121,7 @@ def send_line_notify(message: str):
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         r = requests.post(
             url,
-            json={"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"},
+            json={"chat_id": TELEGRAM_CHAT_ID, "text": message},
             timeout=10,
         )
         return r.ok, r.text
