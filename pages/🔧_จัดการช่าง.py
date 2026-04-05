@@ -1,5 +1,5 @@
 """
-🔧 จัดการช่าง — จ่ายงาน ติดตากจัดการพนักงาน
+🔧 จัดการช่าง — จ่ายงาน ติดตาม จัดการพนักงาน
 """
 import streamlit as st
 from datetime import datetime
@@ -46,9 +46,9 @@ with tab1:
     jobs = load_unassigned()
 
     if not jobs:
-        st.success("✅ ทุกงานถูกจ่ายยให้ช่างขก้าขก้า!")
+        st.success("✅ ทุกงานถูกจ่ายให้ช่างแล้ว!")
     else:
-        st.info(f"📋 มี **{len(jobs)}** งานที่รอจ่ายยให้ช่าง")
+        st.info(f"📋 มี **{len(jobs)}** งานที่รอจ่ายให้ช่าง")
 
         job_labels = {
             f"{r.get('job_id','')} | {r.get('customer_name','')} | {r.get('repair_type','')} | {r.get('urgency','')}": r
@@ -68,8 +68,7 @@ with tab1:
 
             location = selected.get('location', '')
             maps_url = f"https://www.google.com/maps/search/?api=1&query={location.replace(' ', '+')}"
-            st.write(f"**�
- สถานที่:** {location}")
+            st.write(f"**📍 สถานที่:** {location}")
             st.markdown(f"[🗺️ ดูแผนที่ Google Maps]({maps_url})")
 
             channel = selected.get('channel', '-')
@@ -82,21 +81,21 @@ with tab1:
         st.divider()
 
         # ── Step 1: เลือกพนักงานบริการออกตรวจ ──
-        st.markdown("#### 👷 Step 1 —"พนักงานบริการออกตรวจสอบหน้างาน")
+        st.markdown("#### 👷 Step 1 — พนักงานบริการออกตรวจสอบหน้างาน")
         service_names = load_service_staff()
 
         if not service_names:
-            st.warning("⚠️ ยังไม่มีรายชื่อพนักงานบริการกรุณาเพิ่มในแท็บ 'จัดการพนักงาน' ก่อน")
+            st.warning("⚠️ ยังไม่มีรายชื่อพนักงานบริการ กรุณาเพิ่มในแท็บ 'จัดการพนักงาน' ก่อน")
             selected_service = None
         else:
             selected_service = st.selectbox("👷 เลือกพนักงานบริการ *", service_names, key="select_service")
 
         # ── Step 2: เลือกช่าง/บริษัทซ่อม ──
-        st.markdown("#### 🔨 Step 2 —"พนักงานบริการแจ้งช่าง/บริษัทเข้าซ่อม")
+        st.markdown("#### 🔨 Step 2 — พนักงานบริการแจ้งช่าง/บริษัทเข้าซ่อม")
         tech_names = load_repair_techs()
 
         if not tech_names:
-            st.warning("⚠️ ยังไม่มีรายชื่อช่างซ่อมกรุณาเพิ่มในแท็บ 'จัดการพนักงาน' ก่อน")
+            st.warning("⚠️ ยังไม่มีรายชื่อช่างซ่อม กรุณาเพิ่มในแท็บ 'จัดการพนักงาน' ก่อน")
             selected_tech = None
         else:
             selected_tech = st.selectbox("🔧 เลือกช่าง/บริษัทซ่อม *", tech_names, key="select_tech")
@@ -268,33 +267,5 @@ with tab3:
     # ─── เพิ่มพนักงานใหม่ ───
     st.subheader("➕ เพิ่มพนักงานใหม่")
     with st.form("add_staff_form", clear_on_submit=True):
-        new_name  = st.text_input("ชื่อ-นามสกุล *", placeholder="กริกชื่อพนักงาน")
-        new_phone = st.text_input("เบอร์โทรศัพท์", placeholder="0812345678")
-        new_role  = st.selectbox("ตำแหน่ง", ["พนักงานบริการ", "ช่างซ่อม", "ผู้รับเรื่อง"])
-        add_btn   = st.form_submit_button("➕ เพิ่มพนักงาน", use_container_width=True, type="primary")
-
-    if add_btn:
-        if not new_name.strip():
-            st.error("❌ กรุณากรอกชื่อพนักงาน")
-        else:
-            ok, result = insert_technician({
-                "name":   new_name.strip(),
-                "phone":  new_phone.strip(),
-                "role":   new_role,
-                "active": True,
-            })
-            if ok:
-                st.success(f"✅ เพิ่ม **{new_name}** ({new_role}) สำเร็จ!")
-                st.cache_data.clear()
-                st.rerun()
-            else:
-                st.error(f"❌ เพิ่มไม่สำเร็จ: {result}")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🔄 รีเฟรช", use_container_width=True, key="refresh_tab3"):
-            st.cache_data.clear()
-            st.rerun()
-    with col2:
-        if st.button("🏠 หน้าหลัก", use_container_width=True, key="home_tab3"):
-            st.switch_page("🏠_หน้าหลัก.py")
+        new_name  = st.text_input("ชื่อ-นามสกุล *", placeholder="กรอกชื่อพนักงาน")
+        new_phone = st.text_input("เบอร์⸂��_�⏂⣂�ǂ�{��_��0���������������������������(�����������}ɽ������й͕���щ�ࠋ��W��ς��⯂�g��#�����l���{��g��ǂ�����˂�g��k�⏂�ӂ���˂⌈�����+��#��˂���/��#�ⷂ℈�����s����'�⏂�ǂ�k���⏂�߂�#�ⷂ��t�(�����������}�Ѹ�����й��ɵ}�Չ���}���ѽ����zT�����{��ӂ�#�⇂�{��g��ǂ�����˂�d����͕}���х����}ݥ�Ѡ�Q�Ք��������ɥ���䈤((����������}�Ѹ�(�������������Ё���}�������ɥ����(�������������й��ɽȠ��v0����⏂���O��˂��⏂ⷂ���+��߂�#�ⷂ�{��g��ǂ�����˂�d��(����������͔�(����������������ɕ�ձЀ􁥹͕��}ѕ����������(����������������������耀����}�������ɥ����(�����������������������老���}��������ɥ����(�����������������ɽ���耀����}ɽ���(�������������������ѥٔ��Q�Ք�(��������������(������������������(�����������������й�Ս���̡���r�����{��ӂ�#�℀������}�������������}ɽ������⫂�ς��⏂��� ���(�����������������й�����}��ф�����Ƞ�(�����������������йɕ�ո��(��������������͔�(�����������������й��ɽȡ���v0�����{��ӂ�#�⇂��⇂�#�⫂�ς��⏂��� ��ɕ�ձ��((�������İ����Ȁ��й���յ�̠Ȥ(����ݥѠ������(������������й���ѽ����~R��⏂�ׂ����⏂�(����͕}���х����}ݥ�Ѡ�Q�Ք������ɕ�ɕ͡}х�̈��(�������������й�����}��ф�����Ƞ�(�������������йɕ�ո��(����ݥѠ������(������������й���ѽ����~>���⯂�g��'��˂⯂◂�ǂ�����͕}���х����}ݥ�Ѡ�Q�Ք�����􉡽��}х�̈��(�������������й�ݥэ�}�������~>��⯂�g��'��˂⯂◂�ǂ���䈤
