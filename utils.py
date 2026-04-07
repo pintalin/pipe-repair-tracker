@@ -1,11 +1,11 @@
-# utils.py — ฟังก์ชันกลางที่ใช้ร่วมกันทุกหน้า
+# utils.py â à¸à¸±à¸à¸à¹à¸à¸±à¸à¸à¸¥à¸²à¸à¸à¸µà¹à¹à¸à¹à¸£à¹à¸§à¸¡à¸à¸±à¸à¸à¸¸à¸à¸«à¸à¹à¸²
 
 import streamlit as st
 import requests
 
-# ─────────────────────────────────────────
-#  CONFIG  ← แก้ค่าเหล่านี้
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
+#  CONFIG  â à¹à¸à¹à¸à¹à¸²à¹à¸«à¸¥à¹à¸²à¸à¸µà¹
+# âââââââââââââââââââââââââââââââââââââââââ
 SUPABASE_URL = "https://lfwdstvfqoziyewdfkdv.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxmd2RzdHZmcW96aXlld2Rma2R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxODIzNzMsImV4cCI6MjA5MDc1ODM3M30.BxVhK0oPD0YbDB7NjrGtnUzvIN94fcfh4fJPua2mc6E"
 TABLE = "pipe_repairs"
@@ -22,11 +22,11 @@ HEADERS = {
     "Prefer": "return=representation",
 }
 
-# ─────────────────────────────────────────
-#  SUPABASE HELPERS — pipe_repairs
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
+#  SUPABASE HELPERS â pipe_repairs
+# âââââââââââââââââââââââââââââââââââââââââ
 def fetch_all(filters: dict = None, limit: int = 500):
-    """ดึงข้อมูลทั้งหมดจาก Supabase"""
+    """à¸à¸¶à¸à¸à¹à¸­à¸¡à¸¹à¸¥à¸à¸±à¹à¸à¸«à¸¡à¸à¸à¸²à¸ Supabase"""
     params = f"?select=*&order=recorded_at.desc&limit={limit}"
     if filters:
         for k, v in filters.items():
@@ -36,7 +36,7 @@ def fetch_all(filters: dict = None, limit: int = 500):
 
 
 def insert_record(data: dict):
-    """เพิ่มข้อมูลใหม่"""
+    """à¹à¸à¸´à¹à¸¡à¸à¹à¸­à¸¡à¸¹à¸¥à¹à¸«à¸¡à¹"""
     r = requests.post(
         f"{SUPABASE_URL}/rest/v1/{TABLE}",
         headers=HEADERS,
@@ -46,7 +46,7 @@ def insert_record(data: dict):
 
 
 def update_record(record_id: int, data: dict):
-    """อัปเดตข้อมูล"""
+    """à¸­à¸±à¸à¹à¸à¸à¸à¹à¸­à¸¡à¸¹à¸¥"""
     h = {**HEADERS, "Prefer": "return=representation"}
     r = requests.patch(
         f"{SUPABASE_URL}/rest/v1/{TABLE}?id=eq.{record_id}",
@@ -56,11 +56,20 @@ def update_record(record_id: int, data: dict):
     return r.ok, r.json()
 
 
-# ─────────────────────────────────────────
-#  SUPABASE HELPERS — technicians
-# ─────────────────────────────────────────
+def delete_record(record_id: int):
+    """à¸¥à¸à¸£à¸²à¸¢à¸à¸²à¸£à¸à¸²à¸à¸à¹à¸­à¸¡"""
+    r = requests.delete(
+        f"{SUPABASE_URL}/rest/v1/{TABLE}?id=eq.{record_id}",
+        headers=HEADERS,
+    )
+    return r.ok, r.status_code
+
+
+# âââââââââââââââââââââââââââââââââââââââââ
+#  SUPABASE HELPERS â technicians
+# âââââââââââââââââââââââââââââââââââââââââ
 def fetch_technicians(active_only: bool = True):
-    """ดึงรายชื่อพนักงาน/ช่าง"""
+    """à¸à¸¶à¸à¸£à¸²à¸¢à¸à¸·à¹à¸­à¸à¸à¸±à¸à¸à¸²à¸/à¸à¹à¸²à¸"""
     params = "?select=*&order=name.asc"
     if active_only:
         params += "&active=eq.true"
@@ -69,7 +78,7 @@ def fetch_technicians(active_only: bool = True):
 
 
 def insert_technician(data: dict):
-    """เพิ่มพนักงาน/ช่างใหม่"""
+    """à¹à¸à¸´à¹à¸¡à¸à¸à¸±à¸à¸à¸²à¸/à¸à¹à¸²à¸à¹à¸«à¸¡à¹"""
     r = requests.post(
         f"{SUPABASE_URL}/rest/v1/{TECHNICIANS_TABLE}",
         headers=HEADERS,
@@ -79,7 +88,7 @@ def insert_technician(data: dict):
 
 
 def update_technician(tech_id: int, data: dict):
-    """อัปเดตข้อมูลพนักงาน"""
+    """à¸­à¸±à¸à¹à¸à¸à¸à¹à¸­à¸¡à¸¹à¸¥à¸à¸à¸±à¸à¸à¸²à¸"""
     h = {**HEADERS, "Prefer": "return=representation"}
     r = requests.patch(
         f"{SUPABASE_URL}/rest/v1/{TECHNICIANS_TABLE}?id=eq.{tech_id}",
@@ -90,33 +99,33 @@ def update_technician(tech_id: int, data: dict):
 
 
 def get_technician_names(role_filter: str = None):
-    """คืนรายชื่อพนักงานเป็น list สำหรับ selectbox"""
+    """à¸à¸·à¸à¸£à¸²à¸¢à¸à¸·à¹à¸­à¸à¸à¸±à¸à¸à¸²à¸à¹à¸à¹à¸ list à¸ªà¸³à¸«à¸£à¸±à¸ selectbox"""
     techs = fetch_technicians(active_only=True)
     if role_filter:
         techs = [t for t in techs if t.get("role") == role_filter]
     names = [t["name"] for t in techs]
-    return names if names else ["ไม่มีข้อมูล"]
+    return names if names else ["à¹à¸¡à¹à¸¡à¸µà¸à¹à¸­à¸¡à¸¹à¸¥"]
 
 
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
 #  CHANNELS
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
 CHANNELS = [
-    "📱 Line",
-    "📘 Facebook",
-    "📞 Call Center 1162",
-    "☎️ โทรศัพท์แจ้ง",
-    "🚶 Walk-in (เข้ามาแจ้งเอง)",
+    "ð± Line",
+    "ð Facebook",
+    "ð Call Center 1162",
+    "âï¸ à¹à¸à¸£à¸¨à¸±à¸à¸à¹à¹à¸à¹à¸",
+    "ð¶ Walk-in (à¹à¸à¹à¸²à¸¡à¸²à¹à¸à¹à¸à¹à¸­à¸)",
 ]
 
 
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
 #  TELEGRAM NOTIFY
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
 def send_line_notify(message: str):
-    """ส่งแจ้งเตือนผ่าน Telegram Bot"""
+    """à¸ªà¹à¸à¹à¸à¹à¸à¹à¸à¸·à¸­à¸à¸à¹à¸²à¸ Telegram Bot"""
     if TELEGRAM_BOT_TOKEN == "YOUR_BOT_TOKEN" or TELEGRAM_CHAT_ID == "YOUR_CHAT_ID":
-        return False, "ยังไม่ได้ตั้งค่า TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID"
+        return False, "à¸¢à¸±à¸à¹à¸¡à¹à¹à¸à¹à¸à¸±à¹à¸à¸à¹à¸² TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID"
     try:
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         r = requests.post(
@@ -129,9 +138,9 @@ def send_line_notify(message: str):
         return False, str(e)
 
 
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
 #  MOBILE STYLE
-# ─────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââ
 def apply_mobile_style():
     st.markdown("""
     <style>
