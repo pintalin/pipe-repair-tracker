@@ -40,7 +40,7 @@ h1:first-of-type { display: none; }
 /* Header องค์กร */
 .org-header {
     text-align: center;
-    padding: 0.6rem 0 0.2rem;
+    padding: 3.5rem 0 0.2rem;
 }
 .org-name {
     font-size: 1.45rem;
