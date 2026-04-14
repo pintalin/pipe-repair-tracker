@@ -4,10 +4,10 @@ enableCORS = false
 enableXsrfProtection = false
 
 [theme]
-primaryColor = "#2563EB"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F0F4FF"
-textColor = "#1E293B"
+primaryColor = "#0066CC"
+backgroundColor = "#EBF5FB"
+secondaryBackgroundColor = "#D6EAF8"
+textColor = "#1A2D4C"
 font = "sans serif"
 
 [browser]
