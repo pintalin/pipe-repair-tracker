@@ -16,42 +16,42 @@ st.markdown("""
 <style>
 h1:first-of-type { display: none; }
 
-/* ═══ HEADER การ์ด ═══ */
+/* ═══ HEADER ═══ */
 .org-header {
-    background: linear-gradient(135deg, #7B2D00 0%, #E65100 60%, #F57C00 100%);
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%);
     border-radius: 20px;
-    padding: 1.4rem 1.2rem 1.2rem;
+    padding: 1.4rem 1rem 1.2rem;
     text-align: center;
-    box-shadow: 0 6px 24px rgba(230,81,0,0.30);
+    box-shadow: 0 4px 20px rgba(21,101,192,0.18);
     margin-bottom: 1rem;
-}
-.app-title {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: #FFD54F;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-}
-.org-name {
-    font-size: 1.65rem;
-    font-weight: 900;
-    color: #FFFFFF;
-    line-height: 1.3;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-.org-branch {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: #FFE0B2;
-    margin-top: 0.1rem;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.20);
+    border: 1.5px solid #90CAF9;
 }
 .org-logo {
-    width: 52px; height: 52px;
+    width: 56px; height: 56px;
     object-fit: contain;
     margin-bottom: 0.5rem;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.30));
+    filter: drop-shadow(0 2px 6px rgba(13,59,110,0.25));
+}
+.org-name {
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: #0D3B6E;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+}
+.app-title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #E65100;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0.4rem 0 0.15rem;
+}
+.org-subtitle {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1565C0;
+    letter-spacing: 0.04em;
 }
 
 /* ═══ STAT CARDS ═══ */
@@ -62,7 +62,7 @@ h1:first-of-type { display: none; }
     border: 2px solid;
     margin-bottom: 0.4rem;
     background: #FFFFFF;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 14px rgba(21,101,192,0.10);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .stat-card:active { transform: scale(0.97); }
@@ -87,14 +87,14 @@ with st.sidebar:
     <div style="padding:0.6rem 0.3rem 0; text-align:center;">
         <img src="https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png"
              style="width:56px;height:56px;object-fit:contain;margin-bottom:6px;
-                    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));">
-        <div style="font-size:0.95rem;font-weight:900;color:#FFD54F;line-height:1.3;">
+                    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4)) brightness(1.8);">
+        <div style="font-size:0.95rem;font-weight:900;color:#FFFFFF;line-height:1.3;">
             การประปาส่วนภูมิภาค
         </div>
-        <div style="font-size:0.82rem;font-weight:700;color:#FFE0B2;margin-top:2px;">
+        <div style="font-size:0.82rem;font-weight:700;color:#90CAF9;margin-top:2px;">
             สาขาน่าน
         </div>
-        <div style="font-size:0.7rem;color:rgba(255,255,255,0.6);
+        <div style="font-size:0.68rem;color:rgba(255,255,255,0.55);
                     letter-spacing:0.1em;margin-top:4px;text-transform:uppercase;">
             🔧 Pipe Repair Tracker
         </div>
@@ -104,7 +104,7 @@ with st.sidebar:
         <div style="font-size:0.7rem;color:rgba(255,255,255,0.6);margin-bottom:1px;">
             🕐 อัปเดตล่าสุด
         </div>
-        <div style="font-size:0.95rem;font-weight:700;color:#FFD54F;">
+        <div style="font-size:0.95rem;font-weight:700;color:#90CAF9;">
             {now_th().strftime('%d/%m/%Y %H:%M')}
         </div>
     </div>
@@ -114,7 +114,7 @@ with st.sidebar:
     <div id="rb" style="font-family:'Leelawadee UI',Tahoma,sans-serif;
          font-size:0.7rem;color:rgba(255,255,255,0.55);
          text-align:center;padding:4px 0 8px;">
-        🔄 รีเฟรชใน <span id="ct" style="color:#FFD54F;font-weight:700;">10:00</span>
+        🔄 รีเฟรชใน <span id="ct" style="color:#90CAF9;font-weight:700;">10:00</span>
     </div>
     <script>
     (function(){
@@ -130,13 +130,13 @@ with st.sidebar:
     """, height=32)
 
 # ─── Header การ์ด (หน้าหลัก) ───
-st.markdown(f"""
+st.markdown("""
 <div class="org-header">
     <img class="org-logo"
          src="https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png">
-    <div class="app-title">🔧 Pipe Repair Tracker</div>
-    <div class="org-name">การประปาส่วนภูมิภาค</div>
-    <div class="org-branch">สาขาน่าน</div>
+    <div class="org-name">การประปาส่วนภูมิภาคสาขาน่าน</div>
+    <div class="app-title">PIPE REPAIR TRACKER</div>
+    <div class="org-subtitle">ระบบติดตามงานซ่อมท่อ</div>
 </div>
 """, unsafe_allow_html=True)
 

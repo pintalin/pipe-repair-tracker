@@ -162,7 +162,7 @@ def send_line_notify(message: str):
 def apply_mobile_style():
     import streamlit.components.v1 as components
 
-    # ── CSS: Thai font + Material Symbols fix + Warm Orange Theme ──
+    # ── CSS: Thai font + Material Symbols fix + กปภ. Blue Theme ──
     st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
@@ -187,22 +187,22 @@ def apply_mobile_style():
         }
 
         /* ════════════════════════════════
-           🟠 WARM ORANGE THEME
+           🔵 กปภ. BLUE THEME
         ════════════════════════════════ */
 
-        /* พื้นหลัง — ทึบ 100% ไม่โปร่งใส */
-        html, body { background-color: #FFF8F2 !important; }
+        /* พื้นหลัง — ฟ้าอ่อน ทึบ 100% */
+        html, body { background-color: #EBF5FB !important; }
         .stApp,
         [data-testid="stAppViewContainer"],
         [data-testid="stAppViewBlockContainer"],
         [data-testid="stMain"],
         [data-testid="stMainBlockContainer"] {
-            background-color: #FFF8F2 !important;
+            background-color: #EBF5FB !important;
         }
 
-        /* ═══ SIDEBAR — ส้มเข้ม gradient ═══ */
+        /* ═══ SIDEBAR — navy gradient ═══ */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #7B2D00 0%, #E65100 100%) !important;
+            background: linear-gradient(180deg, #0D3B6E 0%, #1565C0 100%) !important;
             min-width: 0 !important;
         }
         section[data-testid="stSidebar"] * { color: #FFFFFF !important; }
@@ -215,15 +215,15 @@ def apply_mobile_style():
             font-size: 1.05rem !important;
         }
         section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"]:hover {
-            background: rgba(255,255,255,0.20) !important;
+            background: rgba(255,255,255,0.18) !important;
         }
         section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"][aria-current="page"] {
-            background: rgba(255,255,255,0.30) !important;
+            background: rgba(255,255,255,0.28) !important;
             font-weight: 700 !important;
-            border-left: 3px solid #FFD54F !important;
+            border-left: 3px solid #90CAF9 !important;
         }
         [data-testid="collapsedControl"] {
-            background: #7B2D00 !important;
+            background: #0D3B6E !important;
             color: white !important;
         }
 
@@ -237,9 +237,9 @@ def apply_mobile_style():
         /* ═══ CARDS / EXPANDERS ═══ */
         [data-testid="stExpander"] {
             background: #FFFFFF !important;
-            border: 1.5px solid #FFCCBC !important;
+            border: 1.5px solid #BBDEFB !important;
             border-radius: 16px !important;
-            box-shadow: 0 3px 12px rgba(230,81,0,0.10) !important;
+            box-shadow: 0 3px 12px rgba(0,102,204,0.09) !important;
             margin-bottom: 0.6rem !important;
         }
         [data-testid="stExpander"] summary {
@@ -248,7 +248,7 @@ def apply_mobile_style():
             font-size: 1.05rem !important;
         }
         [data-testid="stExpander"] summary:hover {
-            background: #FFF3E0 !important;
+            background: #E3F2FD !important;
         }
 
         /* ═══ METRIC CONTAINERS ═══ */
@@ -256,13 +256,13 @@ def apply_mobile_style():
             background: #FFFFFF;
             border-radius: 14px;
             padding: 14px;
-            border: 1.5px solid #FFCCBC;
-            box-shadow: 0 3px 10px rgba(230,81,0,0.08);
+            border: 1.5px solid #BBDEFB;
+            box-shadow: 0 3px 10px rgba(0,102,204,0.08);
         }
 
         /* ═══ BUTTONS — touch-friendly ═══ */
         .stButton > button {
-            background: linear-gradient(135deg, #E65100 0%, #F57C00 100%) !important;
+            background: linear-gradient(135deg, #0066CC 0%, #1565C0 100%) !important;
             color: white !important;
             border: none !important;
             border-radius: 14px !important;
@@ -271,21 +271,21 @@ def apply_mobile_style():
             font-weight: 700 !important;
             min-height: 52px !important;
             width: 100%;
-            box-shadow: 0 3px 10px rgba(230,81,0,0.30) !important;
+            box-shadow: 0 3px 10px rgba(0,102,204,0.28) !important;
             transition: all 0.2s ease !important;
             letter-spacing: 0.02em !important;
         }
         .stButton > button:hover {
-            background: linear-gradient(135deg, #BF360C 0%, #E65100 100%) !important;
-            box-shadow: 0 5px 16px rgba(230,81,0,0.42) !important;
+            background: linear-gradient(135deg, #004FA3 0%, #0D47A1 100%) !important;
+            box-shadow: 0 5px 16px rgba(0,102,204,0.40) !important;
             transform: translateY(-2px) !important;
         }
         .stButton > button:active { transform: translateY(0) !important; }
 
         /* ═══ INPUT / SELECT — larger touch targets ═══ */
         .stSelectbox, .stTextInput, .stTextArea { font-size: 1.05rem; }
-        .stTextInput input, .stTextArea textarea, .stSelectbox select {
-            border: 1.5px solid #FFCCBC !important;
+        .stTextInput input, .stTextArea textarea {
+            border: 1.5px solid #BBDEFB !important;
             border-radius: 12px !important;
             background: #FFFFFF !important;
             padding: 0.6rem 0.75rem !important;
@@ -293,14 +293,13 @@ def apply_mobile_style():
             min-height: 46px !important;
         }
         .stTextInput input:focus, .stTextArea textarea:focus {
-            border-color: #E65100 !important;
-            box-shadow: 0 0 0 3px rgba(230,81,0,0.15) !important;
+            border-color: #0066CC !important;
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.15) !important;
         }
-        /* Label */
         label[data-testid="stWidgetLabel"] p {
             font-size: 0.95rem !important;
             font-weight: 600 !important;
-            color: #5D2E0C !important;
+            color: #0D3B6E !important;
         }
 
         /* ═══ RADIO / CHECKBOX ═══ */
@@ -312,31 +311,30 @@ def apply_mobile_style():
 
         /* ═══ TABS ═══ */
         [data-testid="stTabs"] [role="tablist"] {
-            background: #FFE0B2;
+            background: #D6EAF8;
             border-radius: 14px;
-            padding: 4px;
-            gap: 4px;
+            padding: 4px; gap: 4px;
         }
         [data-testid="stTabs"] [role="tab"] {
             border-radius: 10px !important;
             font-weight: 600 !important;
-            color: #7B2D00 !important;
+            color: #0D3B6E !important;
             padding: 0.5rem 0.75rem !important;
             transition: all 0.2s !important;
         }
         [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
             background: #FFFFFF !important;
-            color: #BF360C !important;
-            box-shadow: 0 2px 8px rgba(230,81,0,0.18) !important;
+            color: #0D3B6E !important;
+            box-shadow: 0 2px 8px rgba(0,102,204,0.15) !important;
         }
 
         /* ═══ DIVIDER ═══ */
-        hr { border-color: #FFCCBC !important; margin: 0.8rem 0 !important; }
+        hr { border-color: #BBDEFB !important; margin: 0.8rem 0 !important; }
 
         /* ═══ TYPOGRAPHY ═══ */
-        h1 { font-size: 1.5rem !important; color: #7B2D00 !important; font-weight: 900 !important; }
-        h2 { font-size: 1.25rem !important; color: #BF360C !important; font-weight: 700 !important; }
-        h3 { color: #E65100 !important; font-weight: 700 !important; }
+        h1 { font-size: 1.5rem !important; color: #0D3B6E !important; font-weight: 900 !important; }
+        h2 { font-size: 1.25rem !important; color: #1565C0 !important; font-weight: 700 !important; }
+        h3 { color: #1565C0 !important; font-weight: 700 !important; }
         p, li { font-size: 1rem !important; line-height: 1.6 !important; }
 
         /* ═══ ALERTS ═══ */
@@ -352,17 +350,17 @@ def apply_mobile_style():
             overflow: hidden !important;
         }
 
-        /* ═══ CAPTION / HELP TEXT ═══ */
+        /* ═══ CAPTION ═══ */
         .stCaption, [data-testid="stCaptionContainer"] p {
             font-size: 0.85rem !important;
-            color: #8D4E1A !important;
+            color: #1565C0 !important;
         }
 
         /* ═══ SCROLLBAR ═══ */
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #FFAB76; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #90CAF9; border-radius: 4px; }
 
-        /* ═══ BOTTOM PADDING สำหรับ iOS safe area ═══ */
+        /* ═══ iOS safe area ═══ */
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
             .block-container {
                 padding-bottom: calc(3rem + env(safe-area-inset-bottom)) !important;
