@@ -26,11 +26,18 @@ h1:first-of-type { display: none; }
     margin-bottom: 1rem;
     border: 1.5px solid #90CAF9;
 }
-.org-logo {
-    width: 56px; height: 56px;
-    object-fit: contain;
-    margin-bottom: 0.5rem;
-    filter: drop-shadow(0 2px 6px rgba(13,59,110,0.25));
+.org-logo-badge {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, #0D3B6E 0%, #1565C0 100%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.5rem;
+    box-shadow: 0 3px 12px rgba(13,59,110,0.30);
+    border: 3px solid rgba(255,255,255,0.6);
+}
+.org-logo-badge span {
+    font-size: 2rem;
+    line-height: 1;
 }
 .org-name {
     font-size: 1.7rem;
@@ -85,9 +92,12 @@ apply_mobile_style()
 with st.sidebar:
     st.markdown(f"""
     <div style="padding:0.6rem 0.3rem 0; text-align:center;">
-        <img src="https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png"
-             style="width:56px;height:56px;object-fit:contain;margin-bottom:6px;
-                    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4)) brightness(1.8);">
+        <div style="width:56px;height:56px;
+                    background:linear-gradient(135deg,rgba(255,255,255,0.25),rgba(255,255,255,0.10));
+                    border-radius:50%;display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 6px;border:2px solid rgba(255,255,255,0.4);font-size:1.8rem;">
+            💧
+        </div>
         <div style="font-size:0.95rem;font-weight:900;color:#FFFFFF;line-height:1.3;">
             การประปาส่วนภูมิภาค
         </div>
@@ -132,8 +142,7 @@ with st.sidebar:
 # ─── Header การ์ด (หน้าหลัก) ───
 st.markdown("""
 <div class="org-header">
-    <img class="org-logo"
-         src="https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png">
+    <div class="org-logo-badge"><span>💧</span></div>
     <div class="org-name">การประปาส่วนภูมิภาคสาขาน่าน</div>
     <div class="app-title">PIPE REPAIR TRACKER</div>
     <div class="org-subtitle">ระบบติดตามงานซ่อมท่อ</div>
