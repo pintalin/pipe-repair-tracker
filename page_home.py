@@ -16,121 +16,129 @@ st.markdown("""
 <style>
 h1:first-of-type { display: none; }
 
-.stApp::before {
-    content: '';
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 72vmin; height: 72vmin;
-    background-image: url('https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.07;
-    pointer-events: none;
-    z-index: 0;
-}
-
+/* ═══ HEADER การ์ด ═══ */
 .org-header {
+    background: linear-gradient(135deg, #7B2D00 0%, #E65100 60%, #F57C00 100%);
+    border-radius: 20px;
+    padding: 1.4rem 1.2rem 1.2rem;
     text-align: center;
-    padding: 3.5rem 0 0.2rem;
+    box-shadow: 0 6px 24px rgba(230,81,0,0.30);
+    margin-bottom: 1rem;
 }
 .app-title {
-    font-size: 1.0rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    color: #E65100;
-    letter-spacing: 0.14em;
+    color: #FFD54F;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
-    opacity: 0.80;
 }
 .org-name {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     font-weight: 900;
-    color: #7B2D00;
+    color: #FFFFFF;
     line-height: 1.3;
-    letter-spacing: 0.01em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 .org-branch {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 700;
-    color: #BF360C;
-    margin-top: 0.15rem;
+    color: #FFE0B2;
+    margin-top: 0.1rem;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.20);
 }
-.org-update {
-    font-size: 0.82rem;
-    color: #A05010;
-    margin-top: 0.5rem;
+.org-logo {
+    width: 52px; height: 52px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.30));
 }
 
+/* ═══ STAT CARDS ═══ */
 .stat-card {
     border-radius: 18px;
-    padding: 1.2rem 0.5rem 1rem;
+    padding: 1.1rem 0.5rem 0.9rem;
     text-align: center;
     border: 2px solid;
     margin-bottom: 0.4rem;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .stat-card:active { transform: scale(0.97); }
 .stat-num {
-    font-size: 3.2rem;
+    font-size: 3rem;
     font-weight: 900;
     line-height: 1;
 }
 .stat-label {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    margin-top: 0.35rem;
-    letter-spacing: 0.02em;
+    margin-top: 0.3rem;
 }
 </style>
-""", unsafe_allow_html=True)
-
-# ─── Header ───
-st.markdown(f"""
-<div class="org-header">
-    <div class="app-title">🔧 Pipe Repair Tracker</div>
-    <div class="org-name">การประปาส่วนภูมิภาค</div>
-    <div class="org-branch">สาขาน่าน</div>
-    <div class="org-update">🕐 อัปเดต: {now_th().strftime('%d/%m/%Y %H:%M')}</div>
-</div>
 """, unsafe_allow_html=True)
 
 apply_mobile_style()
 
-# ─── Auto-refresh ทุก 10 นาที ───
-components.html("""
-<style>
-#refresh-bar {
-    font-family: 'Leelawadee UI', Tahoma, sans-serif;
-    font-size: 0.72rem;
-    color: #888;
-    text-align: center;
-    padding: 2px 0 4px;
-}
-#refresh-bar span { color: #1565C0; font-weight: 700; }
-</style>
-<div id="refresh-bar">🔄 รีเฟรชอัตโนมัติใน <span id="ct">10:00</span> นาที</div>
-<script>
-(function(){
-    var TOTAL = 600;
-    var left  = TOTAL;
-    function fmt(s) {
-        var m = Math.floor(s / 60);
-        var ss = s % 60;
-        return (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss;
-    }
-    function tick() {
-        left--;
-        var el = document.getElementById('ct');
-        if (el) el.textContent = fmt(left);
-        if (left <= 0) { window.parent.location.reload(); }
-    }
-    setInterval(tick, 1000);
-})();
-</script>
-""", height=28)
+# ─── Sidebar: ข้อมูลองค์กร + เวลา + auto-refresh ───
+with st.sidebar:
+    st.markdown(f"""
+    <div style="padding:0.6rem 0.3rem 0; text-align:center;">
+        <img src="https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png"
+             style="width:56px;height:56px;object-fit:contain;margin-bottom:6px;
+                    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));">
+        <div style="font-size:0.95rem;font-weight:900;color:#FFD54F;line-height:1.3;">
+            การประปาส่วนภูมิภาค
+        </div>
+        <div style="font-size:0.82rem;font-weight:700;color:#FFE0B2;margin-top:2px;">
+            สาขาน่าน
+        </div>
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.6);
+                    letter-spacing:0.1em;margin-top:4px;text-transform:uppercase;">
+            🔧 Pipe Repair Tracker
+        </div>
+    </div>
+    <hr style="border-color:rgba(255,255,255,0.2);margin:10px 0 6px;">
+    <div style="text-align:center;padding:0 0.3rem;">
+        <div style="font-size:0.7rem;color:rgba(255,255,255,0.6);margin-bottom:1px;">
+            🕐 อัปเดตล่าสุด
+        </div>
+        <div style="font-size:0.95rem;font-weight:700;color:#FFD54F;">
+            {now_th().strftime('%d/%m/%Y %H:%M')}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    components.html("""
+    <div id="rb" style="font-family:'Leelawadee UI',Tahoma,sans-serif;
+         font-size:0.7rem;color:rgba(255,255,255,0.55);
+         text-align:center;padding:4px 0 8px;">
+        🔄 รีเฟรชใน <span id="ct" style="color:#FFD54F;font-weight:700;">10:00</span>
+    </div>
+    <script>
+    (function(){
+        var left=600;
+        function fmt(s){var m=Math.floor(s/60),ss=s%60;
+            return(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;}
+        function tick(){left--;var el=document.getElementById('ct');
+            if(el)el.textContent=fmt(left);
+            if(left<=0)window.parent.location.reload();}
+        setInterval(tick,1000);
+    })();
+    </script>
+    """, height=32)
+
+# ─── Header การ์ด (หน้าหลัก) ───
+st.markdown(f"""
+<div class="org-header">
+    <img class="org-logo"
+         src="https://upload.wikimedia.org/wikipedia/th/a/a0/Provincial_Waterworks_Authority_logo.png">
+    <div class="app-title">🔧 Pipe Repair Tracker</div>
+    <div class="org-name">การประปาส่วนภูมิภาค</div>
+    <div class="org-branch">สาขาน่าน</div>
+</div>
+""", unsafe_allow_html=True)
 
 # ─── session state ───
 for key, default in [

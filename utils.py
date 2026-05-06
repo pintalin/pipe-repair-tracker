@@ -190,8 +190,15 @@ def apply_mobile_style():
            🟠 WARM ORANGE THEME
         ════════════════════════════════ */
 
-        /* พื้นหลัง — ครีมอุ่น */
-        .stApp { background-color: #FFF8F2 !important; }
+        /* พื้นหลัง — ทึบ 100% ไม่โปร่งใส */
+        html, body { background-color: #FFF8F2 !important; }
+        .stApp,
+        [data-testid="stAppViewContainer"],
+        [data-testid="stAppViewBlockContainer"],
+        [data-testid="stMain"],
+        [data-testid="stMainBlockContainer"] {
+            background-color: #FFF8F2 !important;
+        }
 
         /* ═══ SIDEBAR — ส้มเข้ม gradient ═══ */
         section[data-testid="stSidebar"] {
