@@ -4,11 +4,27 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
+import base64
 from datetime import datetime, date
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from utils import (fetch_all, update_record, delete_record,
                    apply_mobile_style, get_technician_names, CHANNELS, now_th)
+
+# ─── โหลดโลโก้ กปภ. ───
+def _load_logo() -> str:
+    """คืน <img> tag พร้อม base64 หรือ emoji fallback"""
+    logo_path = os.path.join(os.path.dirname(__file__), "assets", "pwa_logo.jpg")
+    if os.path.exists(logo_path):
+        with open(logo_path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode()
+        return (f'<img src="data:image/jpeg;base64,{b64}" '
+                f'style="width:72px;height:72px;object-fit:contain;'
+                f'margin-bottom:0.5rem;border-radius:50%;'
+                f'box-shadow:0 3px 12px rgba(13,59,110,0.25);">')
+    return '<div class="org-logo-badge"><span>💧</span></div>'
+
+LOGO_HTML = _load_logo()
 
 
 # ─── CSS ───
@@ -90,14 +106,10 @@ apply_mobile_style()
 
 # ─── Sidebar: ข้อมูลองค์กร + เวลา + auto-refresh ───
 with st.sidebar:
+    _sb_logo = LOGO_HTML.replace('width:72px;height:72px', 'width:60px;height:60px')
     st.markdown(f"""
     <div style="padding:0.6rem 0.3rem 0; text-align:center;">
-        <div style="width:56px;height:56px;
-                    background:linear-gradient(135deg,rgba(255,255,255,0.25),rgba(255,255,255,0.10));
-                    border-radius:50%;display:flex;align-items:center;justify-content:center;
-                    margin:0 auto 6px;border:2px solid rgba(255,255,255,0.4);font-size:1.8rem;">
-            💧
-        </div>
+        {_sb_logo}
         <div style="font-size:0.95rem;font-weight:900;color:#FFFFFF;line-height:1.3;">
             การประปาส่วนภูมิภาค
         </div>
@@ -140,9 +152,9 @@ with st.sidebar:
     """, height=32)
 
 # ─── Header การ์ด (หน้าหลัก) ───
-st.markdown("""
+st.markdown(f"""
 <div class="org-header">
-    <div class="org-logo-badge"><span>💧</span></div>
+    {LOGO_HTML}
     <div class="org-name">การประปาส่วนภูมิภาคสาขาน่าน</div>
     <div class="app-title">PIPE REPAIR TRACKER</div>
     <div class="org-subtitle">ระบบติดตามงานซ่อมท่อ</div>
