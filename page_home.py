@@ -18,10 +18,19 @@ def _load_logo() -> str:
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode()
-        return (f'<img src="data:image/jpeg;base64,{b64}" '
-                f'style="width:72px;height:72px;object-fit:contain;'
-                f'margin-bottom:0.5rem;border-radius:50%;'
-                f'box-shadow:0 3px 12px rgba(13,59,110,0.25);">')
+        return (
+            f'<div style="'
+            f'display:inline-block;'
+            f'background:linear-gradient(160deg,#1976D2 0%,#0D47A1 100%);'
+            f'border-radius:16px;'
+            f'padding:8px 10px 6px;'
+            f'margin-bottom:0.55rem;'
+            f'box-shadow:0 6px 20px rgba(13,59,110,0.35),inset 0 1px 0 rgba(255,255,255,0.20);'
+            f'border:2px solid rgba(255,255,255,0.30);">'
+            f'<img src="data:image/jpeg;base64,{b64}" '
+            f'style="width:72px;height:72px;object-fit:contain;display:block;">'
+            f'</div>'
+        )
     return '<div class="org-logo-badge"><span>💧</span></div>'
 
 LOGO_HTML = _load_logo()
@@ -43,16 +52,14 @@ h1:first-of-type { display: none; }
     border: 1.5px solid #90CAF9;
 }
 .org-logo-badge {
-    width: 64px; height: 64px;
-    background: linear-gradient(135deg, #0D3B6E 0%, #1565C0 100%);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 0.5rem;
-    box-shadow: 0 3px 12px rgba(13,59,110,0.30);
-    border: 3px solid rgba(255,255,255,0.6);
-}
-.org-logo-badge span {
-    font-size: 2rem;
+    display: inline-block;
+    background: linear-gradient(160deg, #1976D2 0%, #0D47A1 100%);
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin-bottom: 0.55rem;
+    box-shadow: 0 6px 20px rgba(13,59,110,0.35), inset 0 1px 0 rgba(255,255,255,0.20);
+    border: 2px solid rgba(255,255,255,0.30);
+    font-size: 2.4rem;
     line-height: 1;
 }
 .org-name {
@@ -106,7 +113,7 @@ apply_mobile_style()
 
 # ─── Sidebar: ข้อมูลองค์กร + เวลา + auto-refresh ───
 with st.sidebar:
-    _sb_logo = LOGO_HTML.replace('width:72px;height:72px', 'width:60px;height:60px')
+    _sb_logo = LOGO_HTML.replace('width:72px;height:72px', 'width:52px;height:52px').replace('border-radius:16px', 'border-radius:12px').replace('padding:8px 10px 6px', 'padding:6px 8px 4px')
     st.markdown(f"""
     <div style="padding:0.6rem 0.3rem 0; text-align:center;">
         {_sb_logo}
