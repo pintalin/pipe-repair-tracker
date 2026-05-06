@@ -7,7 +7,7 @@ from datetime import datetime
 import io
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from utils import fetch_all, apply_mobile_style
+from utils import fetch_all, apply_mobile_style, now_th
 
 apply_mobile_style()
 
@@ -194,13 +194,13 @@ for col in ["date", "recorded_at", "started_at", "completed_at"]:
 
 csv = df_export.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
 st.download_button("📥 Download CSV", csv,
-    file_name=f"pipe_repair_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
+    file_name=f"pipe_repair_{now_th().strftime('%Y%m%d_%H%M')}.csv",
     mime="text/csv", use_container_width=True)
 
 buf = io.BytesIO()
 df_export.to_excel(buf, index=False, engine="openpyxl")
 st.download_button("📥 Download Excel", buf.getvalue(),
-    file_name=f"pipe_repair_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
+    file_name=f"pipe_repair_{now_th().strftime('%Y%m%d_%H%M')}.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     use_container_width=True)
 

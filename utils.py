@@ -3,6 +3,14 @@
 
 import streamlit as st
 import requests
+from datetime import datetime, timezone, timedelta
+
+# ─── Thailand timezone helper (UTC+7) ───────────────────────────────────
+_TH_TZ = timezone(timedelta(hours=7))
+
+def now_th() -> datetime:
+    """คืนค่าเวลาปัจจุบันในโซนเวลาไทย (UTC+7) เป็น naive datetime"""
+    return datetime.now(_TH_TZ).replace(tzinfo=None)
 
 # ─────────────────────────────────────────
 #  CONFIG — อ่านจาก st.secrets (Streamlit Cloud)

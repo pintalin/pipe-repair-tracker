@@ -3,12 +3,13 @@
 """
 import streamlit as st
 import streamlit.components.v1 as components
-from datetime import datetime, date
+from datetime import datetime
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from utils import (insert_record, send_line_notify, apply_mobile_style,
                    fetch_all, get_technician_names, CHANNELS,
-                   fetch_technicians, insert_technician, update_technician)
+                   fetch_technicians, insert_technician, update_technician,
+                   now_th)
 
 apply_mobile_style()
 
@@ -82,7 +83,7 @@ with st.form("repair_form", clear_on_submit=True):
     st.subheader("📝 ข้อมูลงานซ่อม")
 
     job_id = st.text_input("เลขที่งาน", value=get_next_job_id(), disabled=True)
-    repair_date = st.date_input("📅 วันที่รับแจ้ง", value=date.today(),
+    repair_date = st.date_input("📅 วันที่รับแจ้ง", value=now_th().date(),
                                 help="ค่าเริ่มต้นคือวันนี้ — แก้ได้หากต้องการบันทึกย้อนหลัง")
     st.caption("⏱️ เวลาจะถูกบันทึกอัตโนมัติ ณ ขณะที่กดปุ่มบันทึก")
 
@@ -115,7 +116,7 @@ with st.form("repair_form", clear_on_submit=True):
 
 if submitted:
     # ── จับเวลา ณ ขณะกดปุ่มจริง (real-time) ──
-    now_submit = datetime.now()
+    now_submit = now_th()
 
     if not customer_name or not phone or not location:
         st.error("❌ กรุณากรอกข้อมูลที่มี * ให้ครบถ้วน")

@@ -5,7 +5,7 @@ import streamlit as st
 from datetime import datetime
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from utils import fetch_all, update_record, delete_record, send_line_notify, apply_mobile_style
+from utils import fetch_all, update_record, delete_record, send_line_notify, apply_mobile_style, now_th
 
 apply_mobile_style()
 
@@ -60,7 +60,7 @@ with st.expander("📄 รายละเอียดงาน", expanded=True):
     if recorded:
         try:
             rec_dt = datetime.fromisoformat(str(recorded).replace("Z",""))
-            elapsed = datetime.now() - rec_dt
+            elapsed = now_th() - rec_dt
             h = int(elapsed.total_seconds() // 3600)
             m = int((elapsed.total_seconds() % 3600) // 60)
             color = "🔴" if h >= 24 else ("🟡" if h >= 4 else "🟢")
@@ -100,15 +100,15 @@ with col1:
             update_data = {"status": new_status}
             if update_notes.strip():
                 old_notes = selected.get("notes") or ""
-                update_data["notes"] = f"{old_notes}\n[{datetime.now().strftime('%d/%m %H:%M')}] {update_notes.strip()}".strip()
+                update_data["notes"] = f"{old_notes}\n[{now_th().strftime('%d/%m %H:%M')}] {update_notes.strip()}".strip()
 
             # ─── บันทึก timestamp อัตโนมัติ ───
             if new_status == "กำลังดำเนินการ" and not selected.get("started_at"):
-                update_data["started_at"] = datetime.now().isoformat()
+                update_data["started_at"] = now_th().isoformat()
             elif new_status == "เสร็จสิ้น":
-                update_data["completed_at"] = datetime.now().isoformat()
+                update_data["completed_at"] = now_th().isoformat()
                 if not selected.get("started_at"):
-                    update_data["started_at"] = datetime.now().isoformat()
+                    update_data["started_at"] = now_th().isoformat()
 
             ok, result = update_record(selected["id"], update_data)
 
@@ -122,7 +122,7 @@ with col1:
                     f"👤 {selected.get('customer_name','')} | {selected.get('repair_type','')}\n"
                     f"📍 {selected.get('location','')}\n"
                     f"📊 {current_status} → {new_status}\n"
-                    f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M')}"
+                    f"🕐 {now_th().strftime('%d/%m/%Y %H:%M')}"
                 )
                 if update_notes:
                     msg += f"\n📝 {update_notes}"

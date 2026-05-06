@@ -2,12 +2,13 @@
 🏠 หน้าหลัก — การประปาส่วนภูมิภาคสาขาน่าน
 """
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 from datetime import datetime, date
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from utils import (fetch_all, update_record, delete_record,
-                   apply_mobile_style, get_technician_names, CHANNELS)
+                   apply_mobile_style, get_technician_names, CHANNELS, now_th)
 
 
 # ─── CSS ───
@@ -78,11 +79,44 @@ st.markdown(f"""
 <div class="org-header">
     <div class="org-name">การประปาส่วนภูมิภาค</div>
     <div class="org-branch">สาขาน่าน</div>
-    <div class="org-update">🕐 อัปเดต: {datetime.now().strftime('%d/%m/%Y %H:%M')}</div>
+    <div class="org-update">🕐 อัปเดต: {now_th().strftime('%d/%m/%Y %H:%M')}</div>
 </div>
 """, unsafe_allow_html=True)
 
 apply_mobile_style()
+
+# ─── Auto-refresh ทุก 10 นาที ───
+components.html("""
+<style>
+#refresh-bar {
+    font-family: 'Leelawadee UI', Tahoma, sans-serif;
+    font-size: 0.72rem;
+    color: #888;
+    text-align: center;
+    padding: 2px 0 4px;
+}
+#refresh-bar span { color: #1565C0; font-weight: 700; }
+</style>
+<div id="refresh-bar">🔄 รีเฟรชอัตโนมัติใน <span id="ct">10:00</span> นาที</div>
+<script>
+(function(){
+    var TOTAL = 600;
+    var left  = TOTAL;
+    function fmt(s) {
+        var m = Math.floor(s / 60);
+        var ss = s % 60;
+        return (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss;
+    }
+    function tick() {
+        left--;
+        var el = document.getElementById('ct');
+        if (el) el.textContent = fmt(left);
+        if (left <= 0) { window.parent.location.reload(); }
+    }
+    setInterval(tick, 1000);
+})();
+</script>
+""", height=28)
 
 # ─── session state ───
 for key, default in [
@@ -360,7 +394,7 @@ if st.session_state.view_status:
                         th = int(total_sec // 3600); tm = int((total_sec % 3600) // 60)
                         st.success(f"⏱️ เสร็จภายใน {th} ชม. {tm} นาที")
                     else:
-                        elapsed_sec = (datetime.now() - rec_dt).total_seconds()
+                        elapsed_sec = (now_th() - rec_dt).total_seconds()
                         eh = int(elapsed_sec // 3600); em = int((elapsed_sec % 3600) // 60)
                         clr = "🔴" if eh >= 24 else ("🟡" if eh >= 4 else "🟢")
                         st.caption(f"{clr} รับแจ้งมา {eh} ชม. {em} นาที")
