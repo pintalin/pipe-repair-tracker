@@ -36,49 +36,53 @@ h1:first-of-type { display: none; }
     padding: 3.5rem 0 0.2rem;
 }
 .app-title {
-    font-size: 1.05rem;
+    font-size: 1.0rem;
     font-weight: 700;
-    color: #1565C0;
-    letter-spacing: 0.12em;
+    color: #E65100;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    margin-bottom: 0.4rem;
-    opacity: 0.75;
+    margin-bottom: 0.5rem;
+    opacity: 0.80;
 }
 .org-name {
     font-size: 1.75rem;
     font-weight: 900;
-    color: #0D47A1;
+    color: #7B2D00;
     line-height: 1.3;
     letter-spacing: 0.01em;
 }
 .org-branch {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #1565C0;
+    color: #BF360C;
     margin-top: 0.15rem;
 }
 .org-update {
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    color: #A05010;
+    margin-top: 0.5rem;
 }
 
 .stat-card {
-    border-radius: 16px;
-    padding: 1.1rem 0.4rem 0.8rem;
+    border-radius: 18px;
+    padding: 1.2rem 0.5rem 1rem;
     text-align: center;
-    border: 2.5px solid;
-    margin-bottom: 0.3rem;
+    border: 2px solid;
+    margin-bottom: 0.4rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+.stat-card:active { transform: scale(0.97); }
 .stat-num {
-    font-size: 3rem;
+    font-size: 3.2rem;
     font-weight: 900;
     line-height: 1;
 }
 .stat-label {
     font-size: 0.95rem;
     font-weight: 700;
-    margin-top: 0.3rem;
+    margin-top: 0.35rem;
+    letter-spacing: 0.02em;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -170,9 +174,49 @@ no_tech = len(df[
     (df["status"] != "เสร็จสิ้น")
 ]) if "status" in df.columns else 0
 
-# ─── แจ้งเตือนงานไม่มีช่าง ───
-if no_tech > 0:
-    st.warning(f"⚠️ มี **{no_tech}** งานที่ยังไม่ได้จ่ายให้ช่าง")
+# ══════════════════════════════════════════
+#  🔔 ระบบแจ้งเตือนงานค้าง
+# ══════════════════════════════════════════
+def check_overdue(df):
+    if df.empty or "recorded_at" not in df.columns:
+        return [], [], []
+    active = df[df["status"] != "เสร็จสิ้น"].copy()
+    if active.empty:
+        return [], [], []
+
+    now = now_th()
+    overdue_urgent, overdue_normal, no_tech_list = [], [], []
+
+    for _, row in active.iterrows():
+        rec = row.get("recorded_at")
+        if rec:
+            try:
+                rec_dt = datetime.fromisoformat(str(rec).replace("Z",""))
+                hours = (now - rec_dt).total_seconds() / 3600
+                label = f"{row.get('job_id','')} — {row.get('customer_name','')} ({hours:.0f} ชม.)"
+                if row.get("urgency") == "เร่งด่วน" and hours >= 4:
+                    overdue_urgent.append(label)
+                elif row.get("urgency") != "เร่งด่วน" and hours >= 48:
+                    overdue_normal.append(label)
+            except Exception:
+                pass
+        if not row.get("technician") and row.get("status") != "เสร็จสิ้น":
+            no_tech_list.append(row.get("job_id",""))
+
+    return overdue_urgent, overdue_normal, no_tech_list
+
+overdue_urgent, overdue_normal, no_tech_list = check_overdue(df)
+
+if overdue_urgent:
+    items = "\n".join([f"• {x}" for x in overdue_urgent[:5]])
+    st.error(f"🚨 **งานเร่งด่วนค้างเกิน 4 ชั่วโมง! ({len(overdue_urgent)} งาน)**\n{items}")
+
+if overdue_normal:
+    items = "\n".join([f"• {x}" for x in overdue_normal[:5]])
+    st.warning(f"⏰ **งานปกติค้างเกิน 48 ชั่วโมง ({len(overdue_normal)} งาน)**\n{items}")
+
+if no_tech_list:
+    st.warning(f"👷 **{len(no_tech_list)} งานยังไม่ได้จ่ายให้ช่าง** — {', '.join(no_tech_list[:5])}")
 
 # ══════════════════════════════════════════
 #  EDIT FORM (แสดงเมื่อกดปุ่มแก้ไข)

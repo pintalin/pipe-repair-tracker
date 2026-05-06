@@ -162,169 +162,204 @@ def send_line_notify(message: str):
 def apply_mobile_style():
     import streamlit.components.v1 as components
 
-    # ── CSS: Thai font + Material Symbols fix + กปภ. Blue Theme ──
+    # ── CSS: Thai font + Material Symbols fix + Warm Orange Theme ──
     st.markdown("""
     <style>
-        /* โหลด Material Symbols Rounded จาก Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;900&display=swap');
 
-        /* ฟอนต์ไทย */
+        /* ── ฟอนต์ไทย ── */
         html, body, * {
-            font-family: 'Leelawadee UI', 'Leelawadee', 'Tahoma',
-                         'Noto Sans Thai', 'Noto Sans', 'Arial Unicode MS',
-                         sans-serif !important;
+            font-family: 'Sarabun', 'Leelawadee UI', 'Leelawadee', 'Tahoma',
+                         'Noto Sans Thai', sans-serif !important;
         }
 
-        /* คืนฟอนต์ Material Symbols ให้ Streamlit icons */
+        /* ── Material Symbols ── */
         [data-testid="stIconMaterial"],
         .material-symbols-rounded,
         span[class*="material"] {
             font-family: 'Material Symbols Rounded' !important;
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
-            font-style: normal !important;
-            font-weight: normal !important;
-            line-height: 1 !important;
-            letter-spacing: normal !important;
-            text-transform: none !important;
-            white-space: nowrap !important;
+            font-style: normal !important; font-weight: normal !important;
+            line-height: 1 !important; letter-spacing: normal !important;
+            text-transform: none !important; white-space: nowrap !important;
             display: inline-block !important;
         }
 
         /* ════════════════════════════════
-           กปภ. BLUE THEME
+           🟠 WARM ORANGE THEME
         ════════════════════════════════ */
 
-        /* พื้นหลังหลัก — ฟ้าอ่อน */
-        .stApp {
-            background-color: #EBF5FB !important;
-        }
+        /* พื้นหลัง — ครีมอุ่น */
+        .stApp { background-color: #FFF8F2 !important; }
 
-        /* ═══ SIDEBAR — navy gradient ═══ */
+        /* ═══ SIDEBAR — ส้มเข้ม gradient ═══ */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #0D3B6E 0%, #1565C0 100%) !important;
+            background: linear-gradient(180deg, #7B2D00 0%, #E65100 100%) !important;
             min-width: 0 !important;
         }
-        section[data-testid="stSidebar"] * {
-            color: #FFFFFF !important;
-        }
-        /* Nav links */
+        section[data-testid="stSidebar"] * { color: #FFFFFF !important; }
         section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"] {
             border-radius: 10px !important;
-            margin: 2px 8px !important;
-            padding: 0.5rem 0.75rem !important;
-            color: rgba(255,255,255,0.88) !important;
+            margin: 3px 10px !important;
+            padding: 0.6rem 0.9rem !important;
+            color: rgba(255,255,255,0.90) !important;
             transition: background 0.2s;
+            font-size: 1.05rem !important;
         }
         section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"]:hover {
-            background: rgba(255,255,255,0.18) !important;
+            background: rgba(255,255,255,0.20) !important;
         }
         section[data-testid="stSidebar"] [data-testid="stSidebarNavLink"][aria-current="page"] {
-            background: rgba(255,255,255,0.28) !important;
+            background: rgba(255,255,255,0.30) !important;
             font-weight: 700 !important;
-            color: #FFFFFF !important;
+            border-left: 3px solid #FFD54F !important;
         }
-        /* ซ่อนลูกศร collapse sidebar บน mobile */
         [data-testid="collapsedControl"] {
-            background: #0D3B6E !important;
+            background: #7B2D00 !important;
             color: white !important;
         }
 
-        /* ═══ MAIN CONTENT ═══ */
+        /* ═══ MAIN CONTENT — mobile-first ═══ */
         .block-container {
-            padding: 1rem 0.8rem !important;
-            max-width: 480px;
+            padding: 0.8rem 0.75rem 3rem !important;
+            max-width: 500px;
             margin: auto;
         }
 
         /* ═══ CARDS / EXPANDERS ═══ */
         [data-testid="stExpander"] {
             background: #FFFFFF !important;
-            border: 1px solid #BBDEFB !important;
-            border-radius: 14px !important;
-            box-shadow: 0 2px 8px rgba(0,102,204,0.08) !important;
-            margin-bottom: 0.5rem !important;
+            border: 1.5px solid #FFCCBC !important;
+            border-radius: 16px !important;
+            box-shadow: 0 3px 12px rgba(230,81,0,0.10) !important;
+            margin-bottom: 0.6rem !important;
         }
         [data-testid="stExpander"] summary {
-            border-radius: 14px !important;
+            border-radius: 16px !important;
+            padding: 0.7rem 1rem !important;
+            font-size: 1.05rem !important;
+        }
+        [data-testid="stExpander"] summary:hover {
+            background: #FFF3E0 !important;
         }
 
         /* ═══ METRIC CONTAINERS ═══ */
         [data-testid="metric-container"] {
             background: #FFFFFF;
-            border-radius: 12px;
-            padding: 12px;
-            border: 1px solid #BBDEFB;
-            box-shadow: 0 2px 8px rgba(0,102,204,0.08);
+            border-radius: 14px;
+            padding: 14px;
+            border: 1.5px solid #FFCCBC;
+            box-shadow: 0 3px 10px rgba(230,81,0,0.08);
         }
 
-        /* ═══ BUTTONS ═══ */
+        /* ═══ BUTTONS — touch-friendly ═══ */
         .stButton > button {
-            background: linear-gradient(135deg, #0066CC 0%, #1565C0 100%) !important;
+            background: linear-gradient(135deg, #E65100 0%, #F57C00 100%) !important;
             color: white !important;
             border: none !important;
-            border-radius: 12px !important;
-            padding: 0.6rem !important;
-            font-size: 1rem !important;
+            border-radius: 14px !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 1.05rem !important;
+            font-weight: 700 !important;
+            min-height: 52px !important;
             width: 100%;
-            font-weight: 600 !important;
-            box-shadow: 0 2px 8px rgba(0,102,204,0.25) !important;
+            box-shadow: 0 3px 10px rgba(230,81,0,0.30) !important;
             transition: all 0.2s ease !important;
+            letter-spacing: 0.02em !important;
         }
         .stButton > button:hover {
-            background: linear-gradient(135deg, #004FA3 0%, #0D47A1 100%) !important;
-            box-shadow: 0 4px 14px rgba(0,102,204,0.38) !important;
-            transform: translateY(-1px) !important;
+            background: linear-gradient(135deg, #BF360C 0%, #E65100 100%) !important;
+            box-shadow: 0 5px 16px rgba(230,81,0,0.42) !important;
+            transform: translateY(-2px) !important;
         }
-        /* ปุ่มลบ — แดง */
-        .stButton > button[kind="secondary"],
-        div[data-testid="stButton-delete"] > button {
-            background: linear-gradient(135deg, #E53935 0%, #C62828 100%) !important;
-            box-shadow: 0 2px 8px rgba(229,57,53,0.25) !important;
-        }
+        .stButton > button:active { transform: translateY(0) !important; }
 
-        /* ═══ INPUT / SELECT ═══ */
-        .stSelectbox, .stTextInput, .stTextArea { font-size: 1rem; }
-        .stTextInput input, .stTextArea textarea {
-            border: 1.5px solid #BBDEFB !important;
-            border-radius: 10px !important;
+        /* ═══ INPUT / SELECT — larger touch targets ═══ */
+        .stSelectbox, .stTextInput, .stTextArea { font-size: 1.05rem; }
+        .stTextInput input, .stTextArea textarea, .stSelectbox select {
+            border: 1.5px solid #FFCCBC !important;
+            border-radius: 12px !important;
             background: #FFFFFF !important;
+            padding: 0.6rem 0.75rem !important;
+            font-size: 1.05rem !important;
+            min-height: 46px !important;
         }
         .stTextInput input:focus, .stTextArea textarea:focus {
-            border-color: #0066CC !important;
-            box-shadow: 0 0 0 3px rgba(0,102,204,0.12) !important;
+            border-color: #E65100 !important;
+            box-shadow: 0 0 0 3px rgba(230,81,0,0.15) !important;
+        }
+        /* Label */
+        label[data-testid="stWidgetLabel"] p {
+            font-size: 0.95rem !important;
+            font-weight: 600 !important;
+            color: #5D2E0C !important;
+        }
+
+        /* ═══ RADIO / CHECKBOX ═══ */
+        [data-testid="stRadio"] label,
+        [data-testid="stCheckbox"] label {
+            font-size: 1rem !important;
+            padding: 0.3rem 0 !important;
         }
 
         /* ═══ TABS ═══ */
         [data-testid="stTabs"] [role="tablist"] {
-            background: #D6EAF8;
-            border-radius: 12px;
+            background: #FFE0B2;
+            border-radius: 14px;
             padding: 4px;
             gap: 4px;
         }
         [data-testid="stTabs"] [role="tab"] {
-            border-radius: 9px !important;
+            border-radius: 10px !important;
             font-weight: 600 !important;
-            color: #1565C0 !important;
+            color: #7B2D00 !important;
+            padding: 0.5rem 0.75rem !important;
             transition: all 0.2s !important;
         }
         [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
             background: #FFFFFF !important;
-            color: #0D3B6E !important;
-            box-shadow: 0 1px 6px rgba(0,102,204,0.15) !important;
+            color: #BF360C !important;
+            box-shadow: 0 2px 8px rgba(230,81,0,0.18) !important;
         }
 
         /* ═══ DIVIDER ═══ */
-        hr { border-color: #BBDEFB !important; }
+        hr { border-color: #FFCCBC !important; margin: 0.8rem 0 !important; }
 
         /* ═══ TYPOGRAPHY ═══ */
-        h1 { font-size: 1.5rem !important; color: #0D3B6E !important; }
-        h2 { font-size: 1.2rem !important; color: #1565C0 !important; }
-        h3 { color: #1565C0 !important; }
+        h1 { font-size: 1.5rem !important; color: #7B2D00 !important; font-weight: 900 !important; }
+        h2 { font-size: 1.25rem !important; color: #BF360C !important; font-weight: 700 !important; }
+        h3 { color: #E65100 !important; font-weight: 700 !important; }
+        p, li { font-size: 1rem !important; line-height: 1.6 !important; }
 
         /* ═══ ALERTS ═══ */
         [data-testid="stAlert"] {
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             border: none !important;
+            font-size: 1rem !important;
+        }
+
+        /* ═══ DATAFRAME ═══ */
+        [data-testid="stDataFrame"] {
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+
+        /* ═══ CAPTION / HELP TEXT ═══ */
+        .stCaption, [data-testid="stCaptionContainer"] p {
+            font-size: 0.85rem !important;
+            color: #8D4E1A !important;
+        }
+
+        /* ═══ SCROLLBAR ═══ */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #FFAB76; border-radius: 4px; }
+
+        /* ═══ BOTTOM PADDING สำหรับ iOS safe area ═══ */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .block-container {
+                padding-bottom: calc(3rem + env(safe-area-inset-bottom)) !important;
+            }
         }
     </style>
     """, unsafe_allow_html=True)
