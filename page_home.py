@@ -35,23 +35,32 @@ h1:first-of-type { display: none; }
     text-align: center;
     padding: 3.5rem 0 0.2rem;
 }
+.app-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1565C0;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    opacity: 0.75;
+}
 .org-name {
-    font-size: 1.45rem;
+    font-size: 1.75rem;
     font-weight: 900;
     color: #0D47A1;
-    line-height: 1.35;
+    line-height: 1.3;
     letter-spacing: 0.01em;
 }
 .org-branch {
-    font-size: 1.15rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #1565C0;
-    margin-top: 0.1rem;
+    margin-top: 0.15rem;
 }
 .org-update {
     font-size: 0.8rem;
     color: #888;
-    margin-top: 0.3rem;
+    margin-top: 0.4rem;
 }
 
 .stat-card {
@@ -77,6 +86,7 @@ h1:first-of-type { display: none; }
 # ─── Header ───
 st.markdown(f"""
 <div class="org-header">
+    <div class="app-title">🔧 Pipe Repair Tracker</div>
     <div class="org-name">การประปาส่วนภูมิภาค</div>
     <div class="org-branch">สาขาน่าน</div>
     <div class="org-update">🕐 อัปเดต: {now_th().strftime('%d/%m/%Y %H:%M')}</div>
