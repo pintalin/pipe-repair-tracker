@@ -20,9 +20,11 @@ def _load_logo() -> str:
             b64 = base64.b64encode(f.read()).decode()
         return (
             f'<img src="data:image/jpeg;base64,{b64}" '
-            f'style="width:88px;height:88px;object-fit:contain;'
-            f'display:block;margin:0 auto 0.5rem;'
-            f'filter:drop-shadow(0 4px 10px rgba(13,59,110,0.25));">'
+            f'style="width:90px;height:90px;object-fit:cover;'
+            f'display:block;margin:0 auto 0.6rem;'
+            f'border-radius:14px;'
+            f'box-shadow:0 6px 20px rgba(13,59,110,0.28);'
+            f'border:3px solid rgba(255,255,255,0.85);">'
         )
     return '<div class="org-logo-badge"><span>💧</span></div>'
 
@@ -106,7 +108,7 @@ apply_mobile_style()
 
 # ─── Sidebar: ข้อมูลองค์กร + เวลา + auto-refresh ───
 with st.sidebar:
-    _sb_logo = LOGO_HTML.replace('width:88px;height:88px', 'width:60px;height:60px')
+    _sb_logo = LOGO_HTML.replace('width:90px;height:90px', 'width:58px;height:58px').replace('border-radius:14px', 'border-radius:10px')
     st.markdown(f"""
     <div style="padding:0.6rem 0.3rem 0; text-align:center;">
         {_sb_logo}
