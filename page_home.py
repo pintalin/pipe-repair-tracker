@@ -101,6 +101,61 @@ h1:first-of-type { display: none; }
     font-weight: 700;
     margin-top: 0.3rem;
 }
+
+/* ═══ LIVE TICKER ═══ */
+.ticker-wrap {
+    background: linear-gradient(90deg, #0D3B6E 0%, #1565C0 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 0.9rem;
+    box-shadow: 0 3px 12px rgba(13,59,110,0.25);
+    display: flex;
+    align-items: stretch;
+}
+.ticker-label {
+    background: #E65100;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+    padding: 0.55rem 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    border-radius: 12px 0 0 12px;
+}
+.ticker-track {
+    overflow: hidden;
+    flex: 1;
+    padding: 0.45rem 0;
+}
+.ticker-inner {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker-scroll 28s linear infinite;
+    color: #fff;
+    font-size: 0.86rem;
+    font-weight: 600;
+    padding-left: 100%;
+}
+.ticker-inner:hover { animation-play-state: paused; }
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+.ticker-chip {
+    display: inline-block;
+    background: rgba(255,255,255,0.14);
+    border-radius: 20px;
+    padding: 2px 14px 2px 10px;
+    margin-right: 32px;
+}
+.chip-dot  { color: #FFD54F; margin-right: 5px; }
+.chip-name { color: #ffffff; font-weight: 700; }
+.chip-sep  { color: rgba(255,255,255,0.45); margin: 0 6px; }
+.chip-tech { color: #B3E5FC; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -190,6 +245,41 @@ df = load_data()
 if df.empty:
     st.warning("ไม่พบข้อมูลหรือเชื่อมต่อไม่ได้")
     st.stop()
+
+# ─── Live ticker: งานกำลังดำเนินการ ───
+def _build_ticker(df) -> str:
+    if "status" not in df.columns:
+        return ""
+    inprog = df[df["status"] == "กำลังดำเนินการ"].copy()
+    if inprog.empty:
+        return ""
+    chips = []
+    for _, row in inprog.iterrows():
+        name = row.get("customer_name", "—")
+        tech = row.get("technician") or "ยังไม่จ่ายงาน"
+        job_id = row.get("job_id", "")
+        chips.append(
+            f'<span class="ticker-chip">'
+            f'<span class="chip-dot">🔨</span>'
+            f'<span class="chip-name">{name}</span>'
+            f'<span class="chip-sep">|</span>'
+            f'<span class="chip-tech">ช่าง: {tech}</span>'
+            f'</span>'
+        )
+    inner = "".join(chips)
+    # ปรับความเร็วตามจำนวนรายการ
+    speed = max(18, len(chips) * 9)
+    return f"""
+<div class="ticker-wrap">
+    <div class="ticker-label">🔨&nbsp;กำลังซ่อม</div>
+    <div class="ticker-track">
+        <div class="ticker-inner" style="animation-duration:{speed}s;">{inner}</div>
+    </div>
+</div>"""
+
+_ticker_html = _build_ticker(df)
+if _ticker_html:
+    st.markdown(_ticker_html, unsafe_allow_html=True)
 
 # ─── Month filter ───
 today = pd.Timestamp.now().normalize()
