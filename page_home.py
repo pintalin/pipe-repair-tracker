@@ -191,19 +191,61 @@ if df.empty:
     st.warning("ไม่พบข้อมูลหรือเชื่อมต่อไม่ได้")
     st.stop()
 
+# ─── Month filter ───
+today = pd.Timestamp.now().normalize()
+_MONTH_TH = ["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.",
+              "ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."]
+
+def _month_opts(df):
+    """สร้าง list ตัวเลือกเดือน (label, year, month) จากข้อมูลจริง"""
+    opts = [("ทั้งหมด", None, None)]
+    if "date" in df.columns:
+        months = (
+            df["date"].dropna()
+            .dt.to_period("M")
+            .drop_duplicates()
+            .sort_values(ascending=False)
+        )
+        for p in months:
+            label = f"{_MONTH_TH[p.month]} {p.year+543}"
+            opts.append((label, p.year, p.month))
+    return opts
+
+month_opts = _month_opts(df)
+month_labels = [o[0] for o in month_opts]
+
+cur_y, cur_m = now_th().year, now_th().month
+_cur_label = f"{_MONTH_TH[cur_m]} {cur_y+543}"
+default_idx = next((i for i, o in enumerate(month_opts) if o[1] == cur_y and o[2] == cur_m), 0)
+
+st.markdown("#### 📅 ดูข้อมูลรายเดือน")
+sel_month_label = st.selectbox(
+    "เลือกเดือน", month_labels, index=default_idx, key="sel_month",
+    label_visibility="collapsed"
+)
+sel_opt = month_opts[month_labels.index(sel_month_label)]
+sel_year, sel_mon = sel_opt[1], sel_opt[2]
+
+# กรองข้อมูลตามเดือนที่เลือก
+if sel_year and sel_mon and "date" in df.columns:
+    df_view = df[(df["date"].dt.year == sel_year) & (df["date"].dt.month == sel_mon)].copy()
+    month_title = f" ({sel_month_label})"
+else:
+    df_view = df.copy()
+    month_title = " (ทั้งหมด)"
+
 # ─── คำนวณสถิติ ───
-today   = pd.Timestamp.now().normalize()
-total   = len(df)
-done    = len(df[df["status"] == "เสร็จสิ้น"]) if "status" in df.columns else 0
-inprog  = len(df[df["status"] == "กำลังดำเนินการ"]) if "status" in df.columns else 0
-waiting = len(df[df["status"] == "รอดำเนินการ"]) if "status" in df.columns else 0
-urgent  = len(df[df["urgency"] == "เร่งด่วน"]) if "urgency" in df.columns else 0
-today_n = len(df[df["date"] == today]) if "date" in df.columns else 0
-no_tech = len(df[
-    (df.get("technician", pd.Series(dtype=str)).isna() |
-     (df.get("technician", pd.Series(dtype=str)) == "")) &
-    (df["status"] != "เสร็จสิ้น")
-]) if "status" in df.columns else 0
+total   = len(df_view)
+done    = len(df_view[df_view["status"] == "เสร็จสิ้น"]) if "status" in df_view.columns else 0
+inprog  = len(df_view[df_view["status"] == "กำลังดำเนินการ"]) if "status" in df_view.columns else 0
+waiting = len(df_view[df_view["status"] == "รอดำเนินการ"]) if "status" in df_view.columns else 0
+urgent  = len(df_view[df_view["urgency"] == "เร่งด่วน"]) if "urgency" in df_view.columns else 0
+today_n = len(df_view[df_view["date"] == today]) if "date" in df_view.columns else 0
+no_tech = len(df_view[
+    (df_view.get("technician", pd.Series(dtype=str)).isna() |
+     (df_view.get("technician", pd.Series(dtype=str)) == "")) &
+    (df_view["status"] != "เสร็จสิ้น")
+]) if "status" in df_view.columns else 0
 
 # ══════════════════════════════════════════
 #  🔔 ระบบแจ้งเตือนงานค้าง
@@ -356,7 +398,7 @@ if st.session_state.edit_job:
 # ══════════════════════════════════════════
 #  STAT CARDS
 # ══════════════════════════════════════════
-st.markdown("#### 📊 สรุปสถานะงานซ่อม")
+st.markdown(f"#### 📊 สรุปสถานะงานซ่อม{month_title}")
 
 c1, c2 = st.columns(2)
 with c1:
@@ -426,7 +468,7 @@ if st.session_state.view_status:
     label = st.session_state.view_status
     st.subheader(f"📋 รายการ: {label}")
 
-    df_f = df.copy()
+    df_f = df_view.copy()
     if label == "วันนี้":
         df_f = df_f[df_f["date"] == today] if "date" in df_f.columns else df_f
     elif label == "เร่งด่วน":
@@ -523,6 +565,19 @@ if st.session_state.view_status:
     if st.button("✖️ ปิดรายการ", use_container_width=True, key="close_list"):
         st.session_state.view_status = None
         st.rerun()
+
+# ─── Mini trend chart (ในเดือนที่เลือก) ───
+if "date" in df_view.columns and not df_view.empty:
+    daily = (
+        df_view[df_view["date"].notna()]
+        .groupby(df_view["date"].dt.date)
+        .size()
+        .reset_index()
+    )
+    daily.columns = ["วันที่", "จำนวนงาน"]
+    if len(daily) > 1:
+        st.markdown(f"**📈 งานรายวัน{month_title}**")
+        st.bar_chart(daily.set_index("วันที่"), color="#1565C0", height=140)
 
 st.divider()
 
